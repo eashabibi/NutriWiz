@@ -1,36 +1,41 @@
-import React, { createContext, useState, useContext, useEffect } from "react";
+import { createContext, useContext, useState, useEffect } from "react";
 
-// Step 1: Create a new context
 const UserContext = createContext();
 
-// Step 2: Create a provider component
-export function UserProvider({ children }) {
-  // Step 3: Define a state variable to hold the username
-  const [UserName, setUsername] = useState("");
+export const useUserContext = () => useContext(UserContext);
 
-  // Create a function to update the username
-  const setUserName = (newUsername) => {
-    setUsername(newUsername);
-    // Step 4: Store the username in local storage
-    localStorage.setItem("username", newUsername);
-  };
+export const UserProvider = ({ children }) => {
+  // Initialize user data from localStorage or empty strings
+  const [userEmail, setUserEmail] = useState(
+    localStorage.getItem("userEmail") || ""
+  );
+  const [userName, setUserName] = useState(
+    localStorage.getItem("userName") || ""
+  );
 
-  // Step 5: Use useEffect to retrieve the username from local storage on component mount
+
+  // Save user data to localStorage whenever they change
   useEffect(() => {
-    const storedUsername = localStorage.getItem("username");
-    if (storedUsername) {
-      setUsername(storedUsername);
+    try {
+      localStorage.setItem("userEmail", userEmail);
+      localStorage.setItem("userName", userName);
+    } catch (error) {
+      console.error("Error saving user data to localStorage:", error);
     }
-  }, []);
+  }, [userEmail, userName]);
 
   return (
-    <UserContext.Provider value={{ UserName, setUserName }}>
+    <UserContext.Provider
+      value={{
+        userEmail,
+        setUserEmail,
+        userName,
+        setUserName,
+       
+        
+      }}
+    >
       {children}
     </UserContext.Provider>
   );
-}
-
-// Step 6: Export the provider component and the context itself
-export function useUser() {
-  return useContext(UserContext);
-}
+};

@@ -34,6 +34,32 @@
 	transition: transform 80ms ease-in;
 }
 
+/* eye toggle button*/
+
+/* CSS for password input container */
+.password-input {
+	display: flex;
+	align-items: center;
+	position: relative;
+}
+
+input{
+	border-radius: 5px;
+}
+
+.container input[type="password"] {
+	background-color: #eee;
+	border: none;
+	padding: 12px 110px 12px 10px; /* Adjust the padding values as needed */
+	margin: 8px 0;
+	width: 100%;
+}
+
+	
+  /* eye toggle button*/
+
+
+
 .container button:active {
 	transform: scale(0.95);
 }
@@ -76,6 +102,7 @@
 	width: 768px;
 	max-width: 100%;
 	min-height: 480px;
+	left: 20%;
 }
 
 .form-container {

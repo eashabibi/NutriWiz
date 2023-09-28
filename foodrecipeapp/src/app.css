@@ -16,7 +16,7 @@
   font-size: 15px;
 }
 
-.app__submit, .close-button, .header button {
+.app__submit, .close-button, .header button,.header label{
   padding: 10px 16px;
   font-size: 15px;
   margin-left: 6px;
@@ -28,21 +28,46 @@
   transition: 0.5s all;
 }
 
-.app__submit, .header button{
+.app__submit, .header button,.header label{
   background-color: white;
   color: #FFAEBC;
 }
 
-.app__submit:hover, .header button:hover{
+.app__submit:hover, .header button:hover,header label:hover{
   background-color: #FFAEBC;
   border: 2px solid white;
   color: white;
   cursor: pointer;
 }
+.header{
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 30px;
+}
 
-.header button{
+.header ul{
+  display: flex;
+  list-style: none;
+}
+
+.header ul li{
+  margin-right: 30px;
+}
+.header ul a{
+  text-decoration: none;
+  color: black;
+}
+
+.header button,.header label{
   margin-left: 100px;
 }
+
+#add-label{
+  display:none;
+}
+
+
 
 .close-button:hover {
   background-color: white;
@@ -285,7 +310,7 @@ button{
   cursor: pointer;
 }
 
-.username{
+.username, .username img{
   background-color: #fff;
   color: black;
   height: 40px;
@@ -294,22 +319,247 @@ button{
   display: flex;
   align-items: center;
   justify-content: center;
-  margin-left: 100px;
+  margin-right: 50px;
   cursor: pointer;
   border: 3px solid #01668a;
   transition: all 0.5s;
 }
 
-.username:hover{
+.username:hover, .username img{
   background-color: #b5b5b5;
 }
 
 .profile-block{
   background-color: #fff;
   box-shadow: 2px 2px 2px rgba(0, 0, 0, 0.6);
-  position: relative;
+  position: absolute;
+  z-index: 8;
   padding: 10px;
   border-radius: 5px;
-  top: 50px;
-  left: -100px;
+  right: 70px;
+  top: 70px;
+  height: 300px;
+  width: 300px;
+  padding: 30px;
 }
+
+.profile-block .full-username{
+  margin: 10px 0;
+}
+
+.profile-block button{
+  margin: 10px 0;
+  margin-left: 40px;
+}
+
+/* Styling for the username display */
+.username-display {
+  font-size: 50px; /* Font size of the displayed username */
+  margin-top: 50px; 
+  /* Adjust the margin as needed */
+  color: #e21212; /* Text color for the username */
+  font-weight: bold; /* Bold font for the username */
+}
+
+
+  /* ... Arranging elements position in nav  ... */
+
+
+  /* greetings css */
+  .greetings-container{
+    position: relative;
+  }
+  .greetings-container .title{
+    position: absolute;
+    font-size: 60px;
+    font-weight: bold;
+    left: 10%;
+    top: 20%;
+  }
+
+  .greetings-container img{
+    height: 85vh;
+    position: relative;
+    left: 34%;
+    animation: topdown 1s infinite alternate;
+  }
+
+  @keyframes topdown {
+    0%{
+      transform: translateY(0px);
+    }
+    100%{
+      transform: translateY(10px);
+    }
+  }
+  .greetings-container p{
+    position: absolute;
+    font-size: 20px;
+    left: 10%;
+    top: 35%;
+  }
+
+  .login-greetiings{
+    height: 86.5vh;
+    width: 100%;
+    position: absolute;
+    z-index: 800;
+    background-color: #ebf8d4;
+  }
+    /* greetings css */
+/* eat healthy */
+.eathealthy img{
+  height: 300px;
+  position: absolute;
+  left: 10%;
+  top: 35%;
+}
+/* eat healthy */
+  /* ... About page code ... */
+/* ... About page code ... */
+.about-container {
+  background-image: url("./images/aboutimage.jpg");
+  text-align: auto;
+  margin: 0 auto;
+  background-size: cover;
+  width: 100%;
+  padding: 20px;
+  position: relative;
+  color: white;
+}
+
+.text-background {
+  background-color: rgba(105, 99, 99, 0.8); /* Background color and transparency */
+  padding: 20px 70px 50px 70px;
+  margin: 50px 250px 50px 250px; /* Adjust the left and right padding as needed */
+  border-radius: 20px; /* Add rounded corners for style */
+}
+
+.about-container h1 {
+  font-size: 36px;
+  color: black; /* Initial color */
+  transition: color 0.3s ease-in-out;
+  text-align: center;
+}
+
+.about-container h2 {
+  text-align: center;
+  font-size: 24px;
+  color: black; /* Initial color */
+  margin-top: 20px;
+}
+.last{
+  text-align: center;
+}
+
+  
+    /* ... About page code ... */
+     /* ... contact code ... */
+  
+
+
+
+      /* ... contact page code ... */
+
+
+
+
+
+
+
+
+
+
+
+
+
+      /* Add these CSS styles to your stylesheet */
+
+.contact {
+  background-color: white; /* White background */
+  background-image: url("../src/images/requirecontact.jpg");
+  background-repeat: no-repeat;
+  text-align: center;
+  display: flex;
+  height: 100vh;
+  justify-content: center;
+  align-items: center;
+
+  margin: 0px 0px 0px 0px;
+  background-size: cover;
+  position: relative;
+  color: white;
+}
+
+
+
+.contact-container {
+  border: 2px solid rgb(244, 237, 237); /* Black border around the form */
+  padding: 20px;
+  border-radius: 30px; /* Rounded corners */
+  max-width: 400px; /* Limit the form width */
+  margin: 0 auto; /* Center the form horizontally */
+  margin-left: 450px;
+}
+
+.contact form {
+  display: flex;
+  flex-direction: column;
+  gap: 40px;
+}
+
+button[type="submit"] {
+  padding: 10px 20px; /* Add padding to the button */
+  font-size: 16px; /* Adjust the font size for the button text */
+  background-color: #000; /* Black background color */
+  color: #fff; /* White text color */
+  border: none; 
+  border-radius: 5px; /* Rounded button corners */
+  cursor: pointer; /* Add pointer cursor on hover */
+  align-self: flex-start; /* Align the button to the left */
+}
+
+button[type="submit"]:hover {
+  background-color: #222; /* Darker background color on hover */
+}
+
+input[type="text"],
+input[type="email"] {
+  padding: 12px; /* Adjust the padding for spacing inside the input fields */
+  height: 40px; /* Adjust the height of the input fields */
+  font-size: 16px; /* Adjust the font size as needed */
+}
+
+/* Optionally, you can increase the space inside the textarea for Phone */
+input[type="tel"] {
+  padding: 12px; /* Adjust the padding for spacing inside the input fields */
+  height: 40px; /* Adjust the height of the input fields */
+  font-size: 16px; /* Adjust the font size as needed */
+}
+/* loading after clicking upload button */
+.loading-container{
+  height: 30px;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.loading-container .loading-circle{
+  height: 30px;
+  width: 30px;
+  border-radius: 50%;
+
+  border: 3px solid green;
+  border-left: 3px solid white;
+  animation: rotate 1s linear infinite;
+}
+@keyframes rotate{
+    0%{
+      transform: rotate(0deg);
+    }
+    100%{
+      transform: rotate(360deg);
+    }
+}
+/* loading after clicking upload button */

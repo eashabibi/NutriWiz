@@ -4,7 +4,7 @@ const WelcomePage = () => {
   return (
     <div className="welcome-page">
       <div>
-        <h2>Welcome to the Food Recipe App!</h2>
+        <h2>Welcome to the NutriWiz App!</h2>
         <p>Discover, Cook, and Enjoy Delicious Recipes</p>
         <p>Looking for culinary inspiration? You're in the right place.</p>
         <p>With our app, you can:</p>

@@ -1,20 +1,27 @@
 import React, { useState, Fragment, useEffect, useRef } from "react";
-import Axios from "axios";
 import { useNavigate } from "react-router-dom";
 import "../app.css";
+import { toast } from "react-toastify";
 import RecipeTile from "./RecipeTile";
 import WelcomePage from "./WelcomePage";
 import NoFood from "../images/sadfood.gif";
-import { useUser } from "./UserContext";
+import { useUserContext } from "./UserContext";
+import Confetti from "react-confetti";
 
 const Main = () => {
   const [query, setQuery] = useState("");
   const [recipes, setRecipes] = useState([]);
   const [loading, setLoading] = useState(false);
-  const [showWelcome, setShowWelcome] = useState(true); // Added state variable
+  const [showWelcome, setShowWelcome] = useState(true);
   const Navigate = useNavigate();
   const [showProfile, setShowProfile] = useState(false);
-  const { UserName } = useUser();
+  const [showUsername, setShowUsername] = useState(false);
+  const { userName, userEmail } = useUserContext();
+  const [profilePictureData, setProfilePictureData] = useState(null);
+
+  const [uploadingProfilePicture, setUploadingProfilePicture] = useState(false);
+  const [isConfettiActive, setIsConfettiActive] = useState(true);
+
   const YOUR_APP_ID = "82e453da";
   const YOUR_APP_KEY = "3bb5d1a3b992f408b9003effd74c9c22";
 
@@ -24,12 +31,17 @@ const Main = () => {
     setShowProfile(!showProfile);
   };
 
+  const toggleUsername = () => {
+    setShowUsername(!showUsername);
+  };
+
   const getRecipeInfo = async () => {
     setLoading(true);
     try {
-      const result = await Axios.get(url);
-      setRecipes(result.data.hits);
-      console.log(result.data.hits);
+      const response = await fetch(url);
+      const data = await response.json();
+      setRecipes(data.hits);
+      console.log(data.hits);
     } catch (error) {
       console.error("Error fetching recipes:", error);
     } finally {
@@ -42,28 +54,113 @@ const Main = () => {
   const onSubmit = (e) => {
     e.preventDefault();
     getRecipeInfo();
-    setShowWelcome(false); // Remove the welcome page after clicking "Search"
+    setShowWelcome(false);
   };
 
   const handleLogout = () => {
     Navigate("/");
   };
 
-  // Create a ref for the input field to manage autoFocus
   const inputRef = useRef(null);
 
   useEffect(() => {
-    // Focus on the input field when the welcome page is removed
     if (!showWelcome) {
       inputRef.current.focus();
     }
   }, [showWelcome]);
 
+  useEffect(() => {
+    // Set the timeout
+    const timeoutId = setTimeout(() => {
+      setIsConfettiActive(false);
+    }, 5000);
+
+    // Return a cleanup function
+    return () => {
+      clearTimeout(timeoutId);
+      
+
+    };
+  }, []);
+
+  const [selectedProfilePicture, setSelectedProfilePicture] = useState(null);
+  const profilePictureInputRef = useRef(null);
+
+  const handleSelectProfilePicture = () => {
+    profilePictureInputRef.current.click();
+  };
+
+  const handleProfilePictureChange = (e) => {
+    const file = e.target.files[0];
+    setSelectedProfilePicture(file);
+  };
+
+  const handleUploadProfilePicture = async () => {
+    if (!selectedProfilePicture) {
+      return;
+    }
+    setUploadingProfilePicture(true); // Set loading state to true
+
+    const formData = new FormData();
+    formData.append("profilePicture", selectedProfilePicture);
+    formData.append("mailid", userEmail);
+
+    try {
+      const response = await fetch("http://localhost:5000/setprofilepicture", {
+        method: "POST",
+        body: formData,
+      });
+      if (response.status === 200) {
+        // alert("Profile picture uploaded successfully!");
+
+        // Fetch and update the profile picture immediately
+        getProfilePicture();
+
+        // Hide the profile block
+        setShowProfile(false);
+      } else {
+        toast.error("Failed to upload profile picture.");
+      }
+    } catch (error) {
+      console.error("Error uploading profile picture:", error);
+      alert("Failed to upload profile picture.");
+    } finally {
+      setUploadingProfilePicture(false);
+    }
+  };
+
+  const getProfilePicture = async () => {
+    try {
+      const response = await fetch("http://localhost:5000/getprofilepicture", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ email: userEmail }),
+      });
+
+      if (response.status === 200) {
+        const imageBlob = await response.blob(); // Get the image data as a Blob
+        const imageUrl = URL.createObjectURL(imageBlob); // Convert Blob to a data URL
+        setProfilePictureData(imageUrl);
+      } else {
+        console.log("Profile picture not found for this user.");
+      }
+    } catch (error) {
+      console.error("Error fetching profile picture:", error);
+    }
+  };
+
+  useEffect(() => {
+    // Fetch the user's profile picture when the component mounts
+    getProfilePicture();
+  }, [userEmail]);
+
   return (
     <Fragment>
       <div className="app">
         <div className="header">
-          <h1 onClick={getRecipeInfo}>Food Recipe Plaza 🍔</h1>
+          <h1 onClick={getRecipeInfo}>NutriWiz Plaza 🍔</h1>
           <form className="app__searchForm" onSubmit={onSubmit}>
             <input
               className="app__input"
@@ -72,18 +169,51 @@ const Main = () => {
               autoComplete="off"
               value={query}
               onChange={(e) => setQuery(e.target.value)}
-              autoFocus // Auto focus on the input field
-              ref={inputRef} // Set the ref for the input field
+              autoFocus
+              ref={inputRef}
             />
             <input className="app__submit" type="submit" value="Search" />
           </form>
           <button onClick={handleLogout}>Logout</button>
-          <div className="username" onClick={toggleProfile}>
-            {UserName.charAt(0)}
-          </div>
+          {profilePictureData ? (
+            <img
+              onClick={toggleProfile}
+              src={profilePictureData}
+              alt="Profile"
+              className="username profile-picture"
+            />
+          ) : (
+            <div className="username" onClick={toggleProfile}>
+              {userName.charAt(0)}
+            </div>
+          )}
           {showProfile && (
             <div className="profile-block">
-              <div className="full-username">{UserName}</div>
+              <div className="full-username">
+                <b>Username:</b> {userName}
+              </div>
+              <div className="full-username">
+                <b>Email:</b> {userEmail}
+              </div>
+              <input
+                type="file"
+                accept="image/*"
+                onChange={handleProfilePictureChange}
+                ref={profilePictureInputRef}
+                style={{ display: "none" }}
+              />
+
+              {uploadingProfilePicture && (
+                <div className="loading-container">
+                  <div className="loading-circle"></div>
+                </div>
+              )}
+              <button onClick={handleSelectProfilePicture}>
+                Select Profile
+              </button>
+              <button onClick={handleUploadProfilePicture}>
+                Upload Profile
+              </button>
             </div>
           )}
         </div>
@@ -124,15 +254,17 @@ const Main = () => {
                       <li>🍱 Make sure your search is not too narrow.</li>
                     </ul>
                   </div>
-                  <di className="sadfood">
+                  <div className="sadfood">
                     <img src={NoFood} alt="No food" />
-                  </di>
+                  </div>
                 </div>
               </div>
             )}
           </div>
         )}
+        {showUsername && <div className="username-display">{userName}</div>}
       </div>
+      {isConfettiActive && <Confetti />}
     </Fragment>
   );
 };

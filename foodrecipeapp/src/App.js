@@ -7,6 +7,12 @@ import { getAnalytics } from "firebase/analytics";
 import { ToastContainer } from "react-toastify"; // Import toast for notifications
 import "react-toastify/dist/ReactToastify.css"; // Import toast styles
 import { UserProvider } from "./components/UserContext";
+import AboutUs from "./components/AboutUs";
+import ContactUs from "./components/ContactUs";
+
+
+
+
 
 const firebaseConfig = {
   apiKey: "AIzaSyC3vJO0xQ3WlUACS05pFUKBCiiG7xpn-hw",
@@ -31,6 +37,8 @@ function App() {
         <Routes>
           <Route path="/main" element={<Main />} />
           <Route path="/" element={<LoginSignup />} />
+          <Route path="/aboutus" element={<AboutUs />} />
+          <Route path="/contactus" element={<ContactUs />} />
         </Routes>
         <ToastContainer />
       </Router>
